@@ -1,0 +1,158 @@
+<!--  <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.ui.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js"></script>
+  
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="assets/css/bootstrap-united.css" rel="stylesheet" />
+
+
+<style>
+
+</style>
+
+<script type="text/javascript">
+ 
+
+
+var flag=0;
+$(document).ready(function() {
+	 //Stops the submit request
+   $("#loginForm").submit(function(e){
+          e.preventDefault();
+   });
+	 
+  /* $(function() {
+       $("#loginButton").bind("click", function () {
+           $.cookie("emailID", $("#emailID").val());
+           $.cookie("pwd1", $("#pwd1").val());
+           //window.location.href = "userHome.html";
+       });
+   });*/
+   
+   //checks for the button click event
+   $("#loginButton").click(function(e){
+       //get the form data using another method 
+          
+           var emailID=$("input#emailID").val();
+           var pwd1=$("input#pwd1").val();
+           
+        if(emailID=="" || pwd1=="")
+        	{
+        		alert("Please fill all the fields");
+        	}
+        else
+        {
+        var obj = {emailID:emailID,password:pwd1};  
+       	var myJSON = JSON.stringify(obj);
+
+           //make the AJAX request, dataType is set to json
+           //meaning we are expecting JSON data in response from the server
+           $.ajax({
+        	   
+        	   url: "http://localhost:8080/fbapp3/webapi/user/login",
+               type: "POST",
+               dataType: "json",
+               data: myJSON,
+               crossDomain: true,
+               processData: true,
+               contentType : "application/json",
+               success: function(resp){  
+                   // we have the response  
+                   if(resp!=null){
+                	   var obj = JSON.parse(JSON.stringify(resp));
+                       //var id=obj.emailID;
+                      // alert("setting cookies"+obj.userID);
+                       $.cookie("ID", obj.userID);
+                	//   $.cookie("emailID", $("#emailID").val());
+                       $.cookie("pwd1", $("#pwd1").val());
+                   window.location.href = "userHome.html";
+                  // alert("Server said123:\n '" + resp + "'");
+                  }
+                   else
+                	   {
+                	   flag=1;
+                	   $.removeCookie("ID");
+              	       $.removeCookie("pwd1");
+                	   window.location.href = "login.html";
+                	   }
+                 },  
+                 error: function(e){  
+                   alert('Error121212: ' + e);  
+                  
+                 } 
+        	   
+           
+           });
+        }
+           
+   });
+
+});
+	  </script>	  
+
+
+
+
+<title>User Login</title>
+
+</head>
+
+<body>
+ <div class="navbar navbar-default">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<h2 class="navbar-text" align="center">FACEBOOK</h2>
+		</div>
+</div>
+
+<div class="container">
+		<div class="jumbotron" align="center">
+		<div align="left">
+				
+				<h3> Enter Your Credentials to Login</h3>
+			</div>
+		<form action="#" id="loginForm" method="POST"  name="Form" >
+             
+        <p>
+            <!-- EmailID  : --><input  type="text" placeholder="EmailId" required="true" id="emailID" name="emailID" />
+            <br>
+            <!--Password : --> <input id="pwd1"  placeholder="Password" type="password" required="true" name="pwd1"/>
+        </p>
+        <input class="btn btn-primary" id="loginButton" type="submit"  value="LogIn" />
+        
+    </form>
+		<br>
+		<br>
+		<div align="left">
+		
+			<a class="btn btn-primary" id="loginButton" href="appHome.html" >Home</a> 
+		
+		
+			<a class="btn btn-primary" id="SignUPButton" href="priorLogin.html">Back</a>					
+		
+		</div>	
+				</div>
+
+		<div></div>
+	</div>
+
+
+
+</body>
+</html>

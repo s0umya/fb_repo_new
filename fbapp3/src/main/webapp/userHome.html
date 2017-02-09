@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.ui.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js"></script>
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="assets/css/bootstrap-united.css" rel="stylesheet" />
+
+<meta charset="UTF-8">
+
+<script type="text/javascript">
+
+$(document).ready(function(){	
+	
+	var ID=$.cookie("ID");
+	var src="/fbapp3/images/"+ID+".jpg";
+	$("img").attr('src',src)
+	function UserAction() {
+	    var xhttp = new XMLHttpRequest();
+	    xhttp.open("POST", "http://localhost:8080/fbapp3/webapi/user/retrive", false);
+	    xhttp.setRequestHeader("Content-type", "application/json");
+	    xhttp.send();
+	    var response = JSON.parse(xhttp.responseText);
+	    document.getElementById("line4").innerHTML=response;
+	}
+
+	$(function () {
+	    if ($.cookie("ID") != null && $.cookie("pwd1") != null) {
+
+	        var ID=$.cookie("ID");
+	    	var pwd1=$.cookie("pwd1");	
+	    	//document.write(emailID);
+	    	//document.write(pwd1);
+	    	
+	    	var obj = {userID:ID,password:pwd1};  
+	       	var myJSON = JSON.stringify(obj);
+	       	//document.getElementById("line4").innerHTML=myJSON;
+	       	$.ajax({ 
+	                   url: "http://localhost:8080/fbapp3/webapi/user/retrive",
+	                   type: "GET",
+	                   dataType: "json",
+	                   contentType : "application/json",
+	                   data: myJSON,
+	                   crossDomain: true,
+	                   processData: true,
+	                   
+	                   
+	                   success: function(response){  
+	                       // we have the response  
+	                       if(response!=null){
+	                    	   var obj = JSON.parse(JSON.stringify(response));
+	                           document.getElementById("line1").innerHTML= "User Name:"+obj.emailID;
+	                           document.getElementById("line2").innerHTML= "Your Name:"+obj.name;
+	                           document.getElementById("line3").innerHTML= "Home Town:"+obj.town;
+	                           document.getElementById("line4").innerHTML= "Date of birth:"+obj.date;
+	                           
+	                           
+	                           
+	                       }  
+	                       
+	                       else
+	                    	   {
+	                    	  var flag=1;
+	                    	   $.removeCookie("ID");
+	                  	       $.removeCookie("pwd1");
+	                    	   window.location.href = "login.html";
+	                    	   }
+	                     },
+	    	    
+	          			error: function(e){  
+	            					alert('Error121212: ' + e);  
+	            					alert(e.toString());
+	          			}				
+	            
+	    	  }); 
+	       
+	    }
+	});
+	
+/*	$("#uploadimage").click(function(e) {
+		
+		url: "http://localhost:8080/fbapp3/webapi/user/ImageUpload", // Url to which the request is send
+		type: "POST",             // Type of request to be send, called as method
+		data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+		contentType: multipart/form-data,       // The content type used when sending data to the server.
+		cache: false,             // To unable request pages to be cached
+		processData:false,        // To send DOMDocument or non processed data file it is set to false
+		success: function(data)   // A function to be called if request succeeds
+		{
+		$('#loading').hide();
+		$("#message").html(data);
+		}	
+	});
+*/	
+	$("#logoutButton").click(function(e){
+        //get the form data using another method 
+		alert("Logging out");
+		//console.log("we are about to logout");
+        $.removeCookie("ID");
+	     $.removeCookie("pwd1");
+	     window.location.href = "login.html";
+	});	
+	
+	   
+    });
+
+
+
+</script>
+
+<title>User home page</title>
+</head>
+<body>
+<div class="navbar navbar-default">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<h2 class="navbar-text" align="center">FACEBOOK</h2>
+		</div>
+</div>
+
+
+<a class="btn btn-primary" id="HomeButton" href="appHome.html">Go To Home</a>
+
+<div class="container">
+		<div class="jumbotron" align="center">
+		<div align="center">
+		
+				
+				<h3 align="left"> Your Details</h3>
+				<p id="line1"></p><br>
+				<p id="line2"></p><br>
+				<p id="line3"></p><br>
+				<p id="line4"></p><br>
+			<h2>Profile picture</h2>
+		  	
+				<img id="img" src="" alt="ProfilePic" style=width:304px;height:228px;";>	
+			</div>
+		
+		
+				</div>
+
+	</div>
+
+
+
+
+
+
+
+</body>
+</html>

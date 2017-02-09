@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.ui.min.js"></script>  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js"></script>  
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="assets/css/bootstrap-united.css" rel="stylesheet" />
+
+
+
+<style type="text/css">
+</style>     
+<script type="text/javascript">
+ 
+$(document).ready(function() {
+	 //Stops the submit request
+    $("#SignUPForm").submit(function(e){
+           e.preventDefault();
+    });
+	 
+    $("#SignUPButton").click(function(e){
+        //get the form data using another method 
+             var emailID=$("input#emailID").val();
+           var pwd1=$("input#pwd1").val();
+          
+           var atpos = emailID.indexOf("@");
+           var dotpos = emailID.lastIndexOf(".");
+           
+           if(emailID=="" || pwd1=="")
+       		{
+       		alert("Please fill all the fields");
+       		}
+           else  if (atpos<1 || dotpos<atpos+2 || dotpos+2>=emailID.length) {
+               alert("Not a valid e-mail address.");
+               
+        	   }
+           else if((pwd1.length)<5)
+        	{
+        	   alert("Password should be minimum 6 characters.")
+        	}	   
+           
+           else
+           {
+            var obj = { emailID:emailID,password:pwd1};  
+        	var myJSON = JSON.stringify(obj);
+
+            //make the AJAX request, dataType is set to json
+            //meaning we are expecting JSON data in response from the server
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/fbapp3/webapi/user/fetch",
+                data: myJSON,
+                contentType : "application/json",
+                dataType: "json",
+                
+                //if received a response from the server
+                 success:function(resp) {
+                	// we have the response  
+                     if(resp!=null){
+                    	 alert("success");
+                    	   var obj = JSON.parse(JSON.stringify(resp));
+                    	  $.cookie("ID", obj.userID);
+                    	 //  $.cookie("emailID", $("#emailID").val());
+                       $.cookie("pwd1", $("#pwd1").val());
+                     window.location.href = "AddInfo.html";
+                     //alert("Server said123:\n '" + resp + "'");}
+                 }
+                     else
+                  	   {
+                    	 alert("failure");
+                  	   //flag=1;
+                  	   $.removeCookie("ID");
+                	   $.removeCookie("pwd1");
+                  	   window.location.href = "signup.html";
+                  	   }
+                     },
+                   
+                //If there was no resonse from the server
+                error: function(jqXHR, textStatus, errorThrown){
+                     console.log("Something really bad happened " + textStatus);
+                      $("#ajaxResponse").html(jqXHR.responseText);
+                },
+                
+              //capture the request before it was sent to server
+                beforeSend: function(jqXHR, settings){
+                    //adding some Dummy data to the request
+                    //settings.data += "&dummyData=whatever";
+                    //disable the button until we get the response
+                    $('#myButton').attr("disabled", true);
+                },
+                
+                //this is called after the response or error functions are finsihed
+                //so that we can take some action
+                complete: function(jqXHR, textStatus){
+                    //enable the button 
+                    $('#myButton').attr("disabled", false);
+                }
+                
+      
+            });
+        }
+    });
+ 
+});
+
+	  </script>	  
+
+ 
+
+
+<title>FACEBOOK Signup</title>
+
+</head>
+<body>
+
+ <div class="navbar navbar-default">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<h2 class="navbar-text" align="center">FACEBOOK</h2>
+		</div>
+</div>
+
+<div class="container">
+		<div class="jumbotron" align="center">
+		<form action="#" id="SignUPForm" method="POST"  name="Form" >
+             
+        <p>
+            <!-- EmailID  : --><input  type="text" placeholder="Enter EmailId" required="true" id="emailID" name="emailID" />
+            <br>
+            <!--Password : --> <input id="pwd1"  type="password" placeholder="Create Password" required="true" name="pwd1"/>
+        </p>
+        <input class="btn btn-primary" id="SignUPButton" type="submit"  value="Register" />
+        
+    </form>
+		<br>
+		<br>
+		<div align="left">
+		
+			<a class="btn btn-primary" id="loginButton" href="appHome.html" >Home</a> 
+		
+		
+			<a class="btn btn-primary" id="SignUPButton" href="priorLogin.html">Back</a>					
+		
+		</div>	
+				</div>
+
+		<div></div>
+	</div>
+
+
+
+
+</body>
+</html>
+

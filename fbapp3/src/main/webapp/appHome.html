@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.ui.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js"></script>
+  
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="assets/css/bootstrap-united.css" rel="stylesheet" />
+
+
+<style>
+</style>
+<script type="text/javascript">
+
+$(document).ready(function(){	
+
+	
+	if (typeof $.cookie('token') == 'undefined')
+	{
+		 $.cookie("ID", "null");
+         $.cookie("pwd1", "null");
+         
+	} 
+		
+	    $("#logoutButton").click(function(e){
+	    	var ID=$.cookie("ID");
+	    	var pwd1=$.cookie("pwd1");	
+	
+	    	if(ID=="null")
+			{
+	    		  alert("Login First");
+	    		//$(this).prop("disabled", true);
+			}
+	    	else
+	    	{
+	    		 $.cookie("ID", "null");
+	             $.cookie("pwd1", "null");
+	    		window.location.href = "appHome.html";
+	    	}
+		});	
+	    $("#infoButton").click(function(e){
+	    	var ID=$.cookie("ID");
+	    	var pwd1=$.cookie("pwd1");	
+	
+	    	if(ID=="null")
+			{
+	    		 alert("Login First");
+	    		 window.location.href = "appHome.html";
+	    		//$(this).prop("disabled", true);
+			}
+	    	else
+	    	{
+	    		
+	   	    		window.location.href = "userHome.html";
+	    	}
+		});
+	    $("#loginButton").click(function(e){
+	    	
+	    	var ID=$.cookie("ID");
+	    	var pwd1=$.cookie("pwd1");
+	    	//window.location.href = "signup.html";
+	    	//alert("you clicked me");
+	    	if(ID=="null")
+			{
+	    		
+	    		  window.location.href = "priorLogin.html";
+			}
+	    	else
+	    	{	
+	    		alert("Already Logged in");
+	    		window.location.href="appHome.html";
+	    		//$(this).prop("disabled", true);
+	    	}
+		});	
+
+
+});
+	    
+</script>
+</head>
+<body>
+	  <div class="navbar navbar-default">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<h2 class="navbar-text" align="center">FACEBOOK</h2>
+		</div>
+
+		
+		<!-- /.nav-collapse -->
+	</div>
+	<div class="container">
+		<div class="jumbotron" align="center">
+			<div align="left">
+				<h1>Welcome</h1>
+				<p> login to access your account</p>
+			</div>
+
+			<a class="btn btn-primary" id="loginButton" href="priorLogin.html" >Login</a> 
+			<a class="btn btn-primary" id="logoutButton" href="">Logout</a>
+			<a class="btn btn-primary" id="infoButton" href="userHome.html">Personal Info</a>
+		</div>
+
+		<div></div>
+	</div>
+	
+
+	<script src="bootstrap/js/bootstrap.js">
+</script>
+
+</body>
+</html>

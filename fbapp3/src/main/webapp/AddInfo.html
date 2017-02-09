@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.ui.min.js"></script>  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.cookie/1.3.1/jquery.cookie.js"></script>  
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="assets/css/bootstrap-united.css" rel="stylesheet" />
+
+
+<style type="text/css">
+</style>     
+
+<script type="text/javascript">
+ 
+$(document).ready(function() {
+	
+	var ID = $.cookie("ID", $("#ID").val());
+	 
+	//Stops the submit request
+    $("#SignUPForm").submit(function(e){
+           e.preventDefault();
+    });
+    $("#UpdateButton").click(function(e){
+        //get the form data using another method 
+         var ID=$.cookie("ID");
+         var pwd1=$.cookie("pwd1");	
+         var name=$("input#name").val();
+         var town=$("input#town").val();
+         var dob=$("input#dob").val();
+         var dob_str=dob.toString();
+           
+        if(name=="" || town=="" || dob=="")
+        	{
+        		alert("Please fill all the fields");
+        	}
+        
+       
+        else
+        {
+        	
+            var obj = { userID:ID,password:pwd1,name:name,date:dob_str,town:town};  
+        	var myJSON = JSON.stringify(obj);
+        	//document.write(myJSON);
+            //make the AJAX request, dataType is set to json
+            //meaning we are expecting JSON data in response from the server
+            $.ajax({
+                type: "PUT",
+                url: "http://localhost:8080/fbapp3/webapi/user/update",
+                data: myJSON,
+                contentType : "application/json",
+                dataType: "json",
+                crossDomain: true,
+                processData: true,
+                
+                //if received a response from the server
+                 success:function(resp) {
+                	// we have the response  
+                     if(resp==true){
+                  	   $.cookie("ID", $("#ID").val());
+                       $.cookie("pwd1", $("#pwd1").val());
+                   	  window.location.href = "uploadPic.html";
+                     alert("Server said123:\n '" + resp + "'");}
+                 
+                     else
+                  	   {
+                  	   //flag=1;
+                  	   $.removeCookie("ID");
+                	   $.removeCookie("pwd1");
+                  	   window.location.href = "signup.html";
+                  	   }
+                     },
+                   
+                //If there was no resonse from the server
+                error: function(jqXHR, textStatus, errorThrown){
+                     console.log("Something really bad happened " + textStatus);
+                      $("#ajaxResponse").html(jqXHR.responseText);
+                },
+              
+                
+                
+      
+            });
+        }
+    });
+ 
+});
+
+	  </script>	  
+
+ 
+
+
+<title>FACEBOOK Signup</title>
+
+</head>
+<body>
+
+ <div class="navbar navbar-default">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-responsive-collapse">
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span>
+			</button>
+			<h2 class="navbar-text" align="center">FACEBOOK</h2>
+		</div>
+</div>
+
+<a class="btn btn-primary" id="HomeButton" href="appHome.html">Go To Home</a>
+<div class="container">
+		<div class="jumbotron" align="center">
+		<div align="left">
+				
+				<h3> Enter Your Details</h3>
+			</div>
+		<form action="#" id="SignUPForm" method="POST"  name="Form" >
+             
+        <p>
+            <input  type="text" placeholder="Enter Name" required="true" id="name" name="name" />
+            <br>
+            <input type="text" id="town"  placeholder="Enter Home Town" required="true" name="town"/>
+            <br>
+           
+            Enter date of birth:
+            <input type="date" name="bday" id="dob" placeholder="Enter DOB" required="true" min="1950-01-02"><br><br> 
+           
+         	
+         
+         
+            
+        </p>
+        <input class="btn btn-primary" id="UpdateButton" type="submit"  value="Update Info" />
+        
+    </form>
+    
+		
+				</div>
+
+		
+	</div>
+
+
+
+
+</body>
+</html>
+
